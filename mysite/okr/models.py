@@ -62,3 +62,17 @@ class Initiative(models.Model):
 
     def __str__(self):
         return f"Iniciatyva: {self.title}"
+
+class KPI(models.Model):
+    name = models.CharField(max_length=100)
+    current_value = models.FloatField()
+    target_value = models.FloatField()
+    unit = models.CharField(max_length=20, default='€') # Pvz. %, €, vnt.
+
+    @property
+    def status_color(self):
+        # Paprasta logika: jei pasiekta 90% - žalia, jei 50% - geltona, mažiau - raudona
+        ratio = self.current_value / self.target_value
+        if ratio >= 0.9: return "text-green-500"
+        if ratio >= 0.5: return "text-yellow-500"
+        return "text-red-500"
