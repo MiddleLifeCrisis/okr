@@ -13,6 +13,8 @@ class YearObjective(models.Model):
     goal = models.CharField(max_length=200)
     def __str__(self):
         return f"{self.year} - {self.goal} "
+        return f"{self.year} - {self.goal} "
+        return f"{self.year} - {self.goal} "
 
 
 class YearKeyResult(models.Model):
