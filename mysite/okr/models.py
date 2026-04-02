@@ -1,0 +1,66 @@
+from django.db import models
+
+class Unit(models.Model):
+    name = models.CharField(max_length=50)
+    def __str__(self):
+        return self.name
+
+
+class YearObjective(models.Model):
+    brand = models.CharField(max_length=100, default='Your Brand')
+    team = models.CharField(max_length=200, default='Your Department')
+    year = models.IntegerField()
+    goal = models.CharField(max_length=200)
+    def __str__(self):
+        return f"{self.year} - {self.goal} "
+
+
+class YearKeyResult(models.Model):
+    objective = models.ForeignKey(YearObjective, on_delete=models.CASCADE)
+    name = models.CharField(max_length=200)
+    unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True)
+    annual_goal = models.DecimalField(max_digits=12, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.name} ({self.objective.year})"
+
+class MonthResult(models.Model):
+# 1. Pirmiausia aprašom pasirinkimus
+    MONTH_CHOICES = [
+        (1, 'Sausis'), (2, 'Vasaris'), (3, 'Kovas'), (4, 'Balandis'),
+        (5, 'Gegužė'), (6, 'Birželis'), (7, 'Liepa'), (8, 'Rugpjūtis'),
+        (9, 'Rugsėjis'), (10, 'Spalis'), (11, 'Lapkritis'), (12, 'Gruodis'),
+    ]
+
+    QUARTER_CHOICES = [(1, 'Q1'), (2, 'Q2'), (3, 'Q3'), (4, 'Q4')]
+
+    monthly_key_result = models.ForeignKey(YearKeyResult, on_delete=models.CASCADE)
+    month = models.IntegerField(choices=MONTH_CHOICES, default=1)
+    quarter = models.IntegerField(choices=QUARTER_CHOICES, default=1)
+    planned_result = models.DecimalField(max_digits=12, decimal_places=1)
+    actual_result = models.DecimalField(max_digits=12, decimal_places=1, null=True, blank=True)
+
+    @property
+    def achievement_percentage(self):
+        if self.planned_result and self.actual_result:
+            return (self.actual_result / self.planned_result) * 100
+        return 0
+
+    def __str__(self):
+        # Naudojam get_month_display(), kad matytume tekstą, o ne skaičių
+        return f"{self.monthly_key_result} - Vykdymas: {self.achievement_percentage:.1f}%"
+
+class Action(models.Model):
+    month_result = models.ForeignKey(MonthResult, on_delete=models.CASCADE)
+    title = models.CharField(max_length=200)
+    unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True)
+    planned_result = models.DecimalField(max_digits=12, decimal_places=1)
+    actual_result = models.DecimalField(max_digits=12, decimal_places=1, null=True, blank=True)
+    is_done= models.BooleanField(default=False)
+    notes = models.TextField(null=True, blank=True, verbose_name="Komentarai / Problemos sprendimas")
+
+    def __str__(self):
+        status = "✅" if self.is_done else "❌"
+        return f"{status} {self.title}"
+
+
