@@ -20,6 +20,7 @@ class YearKeyResult(models.Model):
     name = models.CharField(max_length=200)
     unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True)
     annual_goal = models.DecimalField(max_digits=12, decimal_places=2)
+    icon_class = models.CharField(max_length=50, default="fa-rocket")
 
     def __str__(self):
         return f"{self.name} ({self.objective.year})"

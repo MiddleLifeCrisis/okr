@@ -14,7 +14,7 @@
 
         <div class="card m-1" style="width:400px">
             <div class="card-body">
-                <i class="fa-solid fa-sack-dollar card-img-top" style="font-size:48px;" ></i>
+                <i class="fa-solid {{ kr.icon_class }} card-img-top" style="font-size:48px;"></i>
                 <h2 class="card-title">{{ kr.name }}</h2>
                 {% for month_data in kr.monthresult_set.all %}
                     {% if month_data.month == 4 %}
