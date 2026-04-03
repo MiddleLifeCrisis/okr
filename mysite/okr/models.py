@@ -53,7 +53,7 @@ class MonthResult(models.Model):
 
 class Action(models.Model):
     month_result = models.ForeignKey(MonthResult, on_delete=models.CASCADE)
-    title = models.CharField(max_length=200)
+    action_item = models.CharField(max_length=200)
     unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True)
     planned_result = models.DecimalField(max_digits=12, decimal_places=1)
     actual_result = models.DecimalField(max_digits=12, decimal_places=1, null=True, blank=True)
@@ -62,6 +62,6 @@ class Action(models.Model):
 
     def __str__(self):
         status = "✅" if self.is_done else "❌"
-        return f"{status} {self.title} | {self.month_result}"
+        return f"{status} {self.action_item} | {self.month_result}"
 
 

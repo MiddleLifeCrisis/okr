@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import Unit, YearObjective, YearKeyResult, MonthResult, Action
 
 class ActionsAdmin(admin.ModelAdmin):
-    list_display = ('title', 'month_result')
+    list_display = ('action_item', 'month_result')
 
 class MonthResultAdmin(admin.ModelAdmin):
     list_display = ('monthly_key_result', 'month')
