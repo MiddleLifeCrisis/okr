@@ -3,40 +3,43 @@
 {% block content %}
 
 
-<h1 class="mt-4">{{ objective.year }} m. Strategija: {{ objective.brand }}</h1>
+<h1 class="mt-4" xmlns:height="http://www.w3.org/1999/xhtml" xmlns:height="http://www.w3.org/1999/xhtml">{{ objective.year }} m. Strategija: {{ objective.brand }}</h1>
 <p class="lead text-muted">{{ objective.goal }}</p>
 
-<h2 class="mt-5">Metiniai rodikliai (Key Results)</h2>
+<h2 class="mt-5"> "{% now "m" %}" mėn. verslo rezultatai:</h2>
 
-{% for kr in objective.yearkeyresult_set.all %}
+<div class="row" >
 
-    <div class="card" style="width:400px">
-        <div class="card-body">
-            <i class="fa-solid fa-sack-dollar card-img-top" style="font-size:48px;" ></i>
-            <h2 class="card-title">{{ kr.name }}</h2>
-            {% for month_data in kr.monthresult_set.all %}
-                {% if month_data.month == 4 %}
-                    <div class="results" >
-                        <h5>Mėnesio tikslas: {{ month_data.planned_result }}</h5>
-                        <h5>Mėnesio faktas: {{ month_data.actual_result }}</h5>
-                        <h5>Mėnesio progresas: {{ month_data.achievement_percentage|floatformat:1 }}%</h5>
-                    </div>
-                    <div class="progress">
-                        <div class="progress-bar">
-                            <div style="width: {{ month_data.achievement_percentage }}%"></div>
+    {% for kr in objective.yearkeyresult_set.all %}
+
+        <div class="card m-1" style="width:400px">
+            <div class="card-body">
+                <i class="fa-solid fa-sack-dollar card-img-top" style="font-size:48px;" ></i>
+                <h2 class="card-title">{{ kr.name }}</h2>
+                {% for month_data in kr.monthresult_set.all %}
+                    {% if month_data.month == 4 %}
+                        <div class="results" >
+                            <h5>Mėnesio tikslas: {{ month_data.planned_result }}</h5>
+                            <h5>Mėnesio faktas: {{ month_data.actual_result }}</h5>
+                            <h5>Mėnesio progresas: {{ month_data.achievement_percentage|floatformat:1 }}%</h5>
                         </div>
-                    </div>
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar bg-success" style="width: {{ month_data.achievement_percentage }}%"></div>
+                        </div>
 
 
-                {% endif %}
-            {% empty %}
-                <p>Duomenų nėra.</p>
-            {% endfor %}
-            <p class="card-text">Some example text some example text. John Doe is an architect and engineer</p>
-            <a href="#" class="btn btn-primary">See Profile</a>
+                    {% endif %}
+                {% empty %}
+                    <p>Duomenų nėra.</p>
+                {% endfor %}
+                <p class="card-text">Some example text some example text. John Doe is an architect and engineer</p>
+                <a href="#" class="btn btn-primary">See Profile</a>
+            </div>
         </div>
-    </div>
- <br>
-{% endfor %}
+     <br>
+    {% endfor %}
+
+</div>
+
 
 {% endblock %}
