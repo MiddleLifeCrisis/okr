@@ -1,1 +1,39 @@
-<h1>{{ objective.goal }}</h1>
+
+
+{% extends "base.html" %}
+
+{% block content %}
+    <h1 class="mt-4">{{ objective.year }} m. Strategija: {{ objective.brand }}</h1>
+    <p class="lead text-muted">{{ objective.goal }}</p>
+
+    <h2 class="mt-5">Pagrindiniai rodikliai (Key Results)</h2>
+
+    <div class="table-responsive">
+        <table class="table table-hover shadow-sm mt-3">
+            <thead class="table-dark">
+                <tr>
+                    <th>Rodiklio pavadinimas</th>
+                    <th>Tikslas</th>
+                    <th>Vienetai</th>
+                    <th>Veiksmai</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for kr in objective.yearkeyresult_set.all %}
+                <tr>
+                    <td class="fw-bold">{{ kr.name }}</td>
+                    <td>{{ kr.annual_goal }}</td>
+                    <td>{{ kr.unit.name }}</td> <!-- Paimam pavadinimą iš Unit modelio -->
+                    <td>
+                        <a href="#" class="btn btn-primary btn-sm">Mėnesių apžvalga</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center text-muted">Šiai vizijai rodiklių dar nėra.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

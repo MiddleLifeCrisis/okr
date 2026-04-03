@@ -48,7 +48,7 @@ class MonthResult(models.Model):
 
     def __str__(self):
         # Naudojam get_month_display(), kad matytume tekstą, o ne skaičių
-        return f"{self.monthly_key_result} - Vykdymas: {self.achievement_percentage:.1f}%"
+        return f"{self.monthly_key_result} | {self.month} | "
 
 class Action(models.Model):
     month_result = models.ForeignKey(MonthResult, on_delete=models.CASCADE)
@@ -61,6 +61,6 @@ class Action(models.Model):
 
     def __str__(self):
         status = "✅" if self.is_done else "❌"
-        return f"{status} {self.title}"
+        return f"{status} {self.title} | {self.month_result}"
 
 
