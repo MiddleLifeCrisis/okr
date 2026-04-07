@@ -6,7 +6,7 @@ from .models import YearObjective, Action, MonthResult
 
 def index(request):
     objectives = YearObjective.objects.all()
-    goal = objectives.first().goal
+    goal = objectives.get(year=2026).goal
     # goal = YearObjective.objects.first().goal - tas pats tik trumpiau
     brand = objectives.first().brand if objectives.exists() else "Jūsų Brand"
     return render(request, 'index.html',
