@@ -6,7 +6,14 @@ from .models import YearObjective, Action, MonthResult
 
 def index(request):
     objectives = YearObjective.objects.all()
-    return render(request, 'index.html', {'objectives': objectives})
+    goal = objectives.first().goal
+    # goal = YearObjective.objects.first().goal - tas pats tik trumpiau
+    brand = objectives.first().brand if objectives.exists() else "Jūsų Brand"
+    return render(request, 'index.html',
+                  {'objectives': objectives,
+                   'goal': goal,
+                   'brand': brand
+                   })
 
 def dashboard(request, pk):
     objective = get_object_or_404(YearObjective, pk=pk)
