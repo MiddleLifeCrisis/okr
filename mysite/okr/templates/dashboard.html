@@ -17,7 +17,7 @@
                 <i class="fa-solid {{ kr.icon_class }} card-img-top" style="font-size:48px;"></i>
                 <h2 class="card-title">{{ kr.name }}</h2>
                 {% for month_data in kr.monthresult_set.all %}
-                    {% if month_data.month == 4 %}
+                    {% if month_data.month == current_month_num %}
                         <div class="results" >
                             <h5>Mėnesio tikslas: {{ month_data.planned_result }}</h5>
                             <h5>Mėnesio faktas: {{ month_data.actual_result }}</h5>

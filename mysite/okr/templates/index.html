@@ -2,7 +2,7 @@
 {% block content %}
 
 <h1>Labas "{{ brand }}" Vadove!</h1>
-<p> Šių metų tikslas: {{ goal }}:</p>
+<p> <b>"{% now "Y" %}"metų tikslas:</b> {{ goal }}:</p>
 <ul>
     {% for obj in objectives %}
         <li><a href="{% url 'dashboard' obj.pk %}"> {{ obj.month }} einamojo mėnėsio rezultatai  </a>  </li>

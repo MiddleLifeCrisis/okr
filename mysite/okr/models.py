@@ -60,6 +60,12 @@ class Action(models.Model):
     is_done= models.BooleanField(default=False)
     notes = models.TextField(null=True, blank=True, verbose_name="Komentarai / Problemos sprendimas")
 
+    @property
+    def action_achievement_percentage(self):
+        if self.planned_result and self.actual_result:
+            return (self.actual_result / self.planned_result) * 100
+        return 0
+
     def __str__(self):
         status = "✅" if self.is_done else "❌"
         return f"{status} {self.action_item} | {self.month_result}"

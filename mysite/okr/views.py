@@ -23,6 +23,7 @@ def dashboard(request, pk):
                                               })
 
 def action_items(request, year, month, kr_id):
+
     month_result = get_object_or_404(
         MonthResult,
         id=kr_id,
@@ -30,9 +31,7 @@ def action_items(request, year, month, kr_id):
         monthly_key_result__objective__year=year,
     )
 
-    action_items = month_result.action_set.all()
-
     return render(request, 'actions.html', {
         'month_result': month_result,
-        'action_items': action_items,
+        'actions': month_result.action_set.all()
     })
