@@ -1,7 +1,9 @@
-from datetime import timezone
+
 from django.utils import timezone
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from .forms import KeyResultForm, ObjectiveForm
 from .models import Objective, Action, MonthResult
+from .services import generate_month_results
 
 
 def index(request):
@@ -35,3 +37,26 @@ def action_items(request, year, month, kr_id):
         'month_result': month_result,
         'actions': month_result.action_set.all()
     })
+
+def month_result_calc(request):
+    if request.method == 'POST':
+        form = KeyResultForm(request.POST)
+        if form.is_valid():
+            key_result = form.save()
+            generate_month_results(key_result)
+            return redirect('dashboard', pk = key_result.objective.pk)
+    else:
+        form = KeyResultForm()
+
+    return render(request, 'month_result_calc.html', {'form': form})
+
+def onboarding (request):
+    if request.method == 'POST':
+        form = ObjectiveForm(request.POST)
+        if form.is_valid():
+            objective = form.save()
+            return redirect('dashboard', pk = objective.pk)
+    else:
+        form = ObjectiveForm()
+
+    return render(request, 'onboarding.html', {'form': form})

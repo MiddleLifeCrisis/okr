@@ -7,6 +7,8 @@ class Unit(models.Model):
 
 
 class Objective(models.Model):
+
+
     brand = models.CharField(max_length=100, default='Your Brand')
     team = models.CharField(max_length=200, default='Your Department')
     year = models.IntegerField()
@@ -16,11 +18,23 @@ class Objective(models.Model):
 
 
 class KeyResult(models.Model):
+    DISTRIBUTION_CHOICES = [
+        ('cumulative', 'Išdaliniamas per mėnesius (÷ 12)'),
+        ('fixed', 'Vienodas procentas viesiems mėn'),
+        ('binary', 'Įvykdyta / Neįvykdyta')
+    ]
+
     objective = models.ForeignKey(Objective, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True)
     annual_goal = models.DecimalField(max_digits=12, decimal_places=2)
     icon_class = models.CharField(max_length=50, default="fa-rocket")
+
+    distribution_type = models.CharField(
+        max_length=20,
+        choices=DISTRIBUTION_CHOICES,
+        default='cumulative',
+    )
 
     def __str__(self):
         return f"{self.name} ({self.objective.year})"
