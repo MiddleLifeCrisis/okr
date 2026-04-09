@@ -15,7 +15,7 @@ class Objective(models.Model):
         return f"{self.year} - {self.goal} "
 
 
-class YearKeyResult(models.Model):
+class KeyResult(models.Model):
     objective = models.ForeignKey(Objective, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True)
@@ -35,7 +35,7 @@ class MonthResult(models.Model):
 
     QUARTER_CHOICES = [(1, 'Q1'), (2, 'Q2'), (3, 'Q3'), (4, 'Q4')]
 
-    monthly_key_result = models.ForeignKey(YearKeyResult, on_delete=models.CASCADE)
+    monthly_key_result = models.ForeignKey(KeyResult, on_delete=models.CASCADE)
     month = models.IntegerField(choices=MONTH_CHOICES, default=1)
     quarter = models.IntegerField(choices=QUARTER_CHOICES, default=1)
     planned_result = models.DecimalField(max_digits=12, decimal_places=1)
