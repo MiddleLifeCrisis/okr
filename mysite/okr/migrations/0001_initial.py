@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='YearObjective',
+            name='Objective',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('brand', models.CharField(default='Your Brand', max_length=100)),
@@ -58,7 +58,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=200)),
                 ('annual_goal', models.DecimalField(decimal_places=2, max_digits=12)),
                 ('unit', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='okr.unit')),
-                ('objective', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='okr.yearobjective')),
+                ('objective', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='okr.objective')),
             ],
         ),
         migrations.AddField(

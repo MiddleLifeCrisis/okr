@@ -6,7 +6,7 @@ class Unit(models.Model):
         return self.name
 
 
-class YearObjective(models.Model):
+class Objective(models.Model):
     brand = models.CharField(max_length=100, default='Your Brand')
     team = models.CharField(max_length=200, default='Your Department')
     year = models.IntegerField()
@@ -16,7 +16,7 @@ class YearObjective(models.Model):
 
 
 class YearKeyResult(models.Model):
-    objective = models.ForeignKey(YearObjective, on_delete=models.CASCADE)
+    objective = models.ForeignKey(Objective, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True)
     annual_goal = models.DecimalField(max_digits=12, decimal_places=2)

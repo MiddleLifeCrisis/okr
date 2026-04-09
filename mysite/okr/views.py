@@ -1,13 +1,13 @@
 from datetime import timezone
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404
-from .models import YearObjective, Action, MonthResult
+from .models import Objective, Action, MonthResult
 
 
 def index(request):
-    objectives = YearObjective.objects.all()
+    objectives = Objective.objects.all()
     goal = objectives.get(year=timezone.now().year).goal if objectives.exists() else "Jūsų metai"
-    # goal = YearObjective.objects.first().goal - tas pats tik trumpiau
+    # goal = Objective.objects.first().goal - tas pats tik trumpiau
     brand = objectives.first().brand if objectives.exists() else "Jūsų Brand"
     return render(request, 'index.html',
                   {'objectives': objectives,
@@ -16,7 +16,7 @@ def index(request):
                    })
 
 def dashboard(request, pk):
-    objective = get_object_or_404(YearObjective, pk=pk)
+    objective = get_object_or_404(Objective, pk=pk)
     current_month_num = timezone.now().month
     return render(request, 'dashboard.html', {'objective': objective,
                                               'current_month_num': current_month_num
