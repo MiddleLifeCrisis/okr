@@ -8,17 +8,17 @@ def generate_month_results(key_result):
 
     for month_num in range(1,13):
         if key_result.distribution_type == 'cumulative':
-            planned = (key_result.annual_goal / Decimal('12')).quantize(Decimal('0.1'))
+            planned_result = (key_result.annual_goal / Decimal('12')).quantize(Decimal('0.1'))
         elif key_result.distribution_type == 'fixed':
-            planned = key_result.annual_goal
+            planned_result = key_result.annual_goal
         elif key_result.distribution_type == 'binary':
-            planned = Decimal('1')
+            planned_result = Decimal('1')
 
         MonthResult.objects.get_or_create(
             monthly_key_result=key_result,
             month=month_num,
             defaults={
                 'quarter': QUARTER_MAP[month_num],
-                'planned': planned,
+                'planned_result': planned_result,
             }
         )

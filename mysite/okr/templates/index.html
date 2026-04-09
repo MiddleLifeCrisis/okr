@@ -5,7 +5,7 @@
 <p> <b>"{% now "Y" %}"metų tikslas:</b> {{ goal }}:</p>
 <ul>
     {% for obj in objectives %}
-        <li><a href="{% url 'dashboard' obj.pk %}"> {{ obj.month }} einamojo mėnėsio rezultatai  </a>  </li>
+        <li><a href="{% url 'dashboard' obj.pk %}"> {{ obj.year }} einamojo mėnėsio rezultatai  </a>  </li>
     {% endfor %}
 </ul>
 

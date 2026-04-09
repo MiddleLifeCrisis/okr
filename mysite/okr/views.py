@@ -8,7 +8,7 @@ from .services import generate_month_results
 
 def index(request):
     objectives = Objective.objects.all()
-    goal = objectives.get(year=timezone.now().year).goal if objectives.exists() else "Jūsų metai"
+    goal = objectives.filter(year=timezone.now().year).first().goal if objectives.exists() else "Jūsų metai"
     # goal = Objective.objects.first().goal - tas pats tik trumpiau
     brand = objectives.first().brand if objectives.exists() else "Jūsų Brand"
     return render(request, 'index.html',
@@ -38,11 +38,13 @@ def action_items(request, year, month, kr_id):
         'actions': month_result.action_set.all()
     })
 
-def month_result_calc(request):
+def month_result_calc(request, objective_pk):
     if request.method == 'POST':
         form = KeyResultForm(request.POST)
         if form.is_valid():
-            key_result = form.save()
+            key_result = form.save(commit=False)
+            key_result.objective = Objective.objects.get(pk=objective_pk)
+            key_result.save()
             generate_month_results(key_result)
             return redirect('dashboard', pk = key_result.objective.pk)
     else:
