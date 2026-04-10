@@ -1,14 +1,24 @@
 from django import forms
-from .models import Objective,KeyResult
+from .models import Objective,KeyResult, MonthResult
 
 class ObjectiveForm(forms.ModelForm):
     class Meta:
         model = Objective
         fields = ['brand', 'team', 'year', 'goal']
+        widgets = {
+            'goal': forms.Textarea(attrs={'rows': 3}),
+        }
 
 class KeyResultForm(forms.ModelForm):
     class Meta:
         model = KeyResult
         fields = ['name', 'unit', 'annual_goal', 'distribution_type']
+        widgets = {
+            'name': forms.TextInput(attrs={'list': 'kr-suggestions'}),
+        }
 
+class MonthResultForm(forms.ModelForm):
+    class Meta:
+        model = MonthResult
+        fields = ['actual_result']
 

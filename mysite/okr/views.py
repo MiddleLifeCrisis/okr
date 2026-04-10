@@ -1,8 +1,8 @@
 
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import KeyResultForm, ObjectiveForm
-from .models import Objective, Action, MonthResult
+from .forms import KeyResultForm, ObjectiveForm, MonthResultForm
+from .models import Objective, Action, MonthResult, KeyResultSuggestion
 from .services import generate_month_results
 
 
@@ -33,9 +33,18 @@ def action_items(request, year, month, kr_id):
         monthly_key_result__objective__year=year,
     )
 
+    if request.method == 'POST':
+        form = MonthResultForm(request.POST, instance=month_result)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard', pk = month_result.monthly_key_result.objective.pk)
+    else:
+        form = MonthResultForm(instance=month_result)
+
     return render(request, 'actions.html', {
         'month_result': month_result,
-        'actions': month_result.action_set.all()
+        'actions': month_result.action_set.all(),
+        'form': form,
     })
 
 def month_result_calc(request, objective_pk):
@@ -62,3 +71,33 @@ def onboarding (request):
         form = ObjectiveForm()
 
     return render(request, 'onboarding.html', {'form': form})
+
+def month_result_calc(request, objective_pk):
+    suggestions = KeyResultSuggestion.objects.all()
+
+    if request.method == 'POST':
+        form = KeyResultForm(request.POST)
+        if form.is_valid():
+            key_result = form.save(commit=False)
+            key_result.objective = Objective.objects.get(pk=objective_pk)
+            key_result.save()
+            generate_month_results(key_result)
+            return redirect('dashboard', pk = key_result.objective.pk)
+    else:
+        form = KeyResultForm()
+
+    return render(request, 'month_result_calc.html', {
+        'form': form,
+        'suggestions': suggestions
+    })
+
+def update_month_form(request):
+    if request.method == 'POST':
+        form = MonthResultForm(request.POST)
+        if form.is_valid():
+            actual_result = form.save()
+            return redirect('dashboard', pk=month_resutl)
+    else:
+        form = MonthResultForm()
+
+    return render(request, 'actions.html', {'form': form})

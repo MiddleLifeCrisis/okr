@@ -3,7 +3,14 @@
 {% block content %}
 <form method="post">
     {% csrf_token %}
+        <datalist id="kr-suggestions">
+            {% for s in suggestions %}
+                <option value="{{ s.name }}">
+            {% endfor %}
+        </datalist>
     {{ form.as_p }}
+
     <button type="submit">Išsaugoti</button>
 </form>
+
 {% endblock %}
