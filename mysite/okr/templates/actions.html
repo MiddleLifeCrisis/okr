@@ -2,12 +2,17 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h1>Veiksmų planas (Action Items)</h1>
+    <h1>Mėnesio rezultatas</h1>
     <p class="lead">Rodiklis: {{ month_result.monthly_key_result.name }}</p>
     <p class="text-muted">Laikotarpis: {{ month_result.month }} mėnuo, {{ month_result.monthly_key_result.objective.year }} m.</p>
-
+    <h5>Mėnesio tikslas: {{ month_result.planned_result }}</h5>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+    <button type="submit">Išsaugoti</button>
+</form>
     <hr>
-
+    <h2>Mėnesio užduotys:</h2>
     <ul class="list-group">
         {% for action in actions %}
             <li class="list-group-item d-flex justify-content-between align-items-center">
