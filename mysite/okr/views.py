@@ -1,7 +1,7 @@
 
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import KeyResultForm, ObjectiveForm, MonthResultForm, ActionForm
+from .forms import KeyResultForm, ObjectiveForm, MonthResultForm, ActionForm, ActionUpdateForm
 from .models import Objective, Action, MonthResult, KeyResultSuggestion
 from .services import generate_month_results
 
@@ -53,7 +53,13 @@ def action_items(request, year, month, kr_id):
                 action = action_form.save(commit=False)
                 action.month_result = month_result
                 action.save()
-        return redirect('dashboard', pk=month_result.monthly_key_result.objective.pk)
+        elif request.POST.get('form_type') == 'action_update':
+            action_id = request.POST.get('action_id')
+            action = get_object_or_404(Action, id=action_id)
+            action_update_form = ActionUpdateForm(request.POST, instance=action)
+            if action_update_form.is_valid():
+                action_update_form.save()
+        return redirect('action_items', year=year, month=month, kr_id=kr_id)
     else:
         form = MonthResultForm(instance=month_result)
         action_form = ActionForm()

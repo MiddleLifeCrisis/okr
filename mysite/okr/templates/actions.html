@@ -6,17 +6,12 @@
     <p class="lead">Rodiklis: {{ month_result.monthly_key_result.name }}</p>
     <p class="text-muted">Laikotarpis: {{ month_result.month }} mėnuo, {{ month_result.monthly_key_result.objective.year }} m.</p>
     <h5>Mėnesio tikslas: {{ month_result.planned_result }}</h5>
-    <form method="post">
-        <input type="hidden" name="form_type" value="month_result">
-        {% csrf_token %}
-        {{ form.actual_result }}
-        <button type="submit">Išsaugoti</button>
-    </form>
+    <h5>Mėnesio tikslas: {{ month_result.actual_result }}</h5>
+    <h5>Mėnesio progresas: {{ month_result.achievement_percentage|floatformat:1 }}%</h5>
     <hr>
     <h2>Mėnesio užduotys:</h2>
     <ul class="list-group">
         {% for action in actions %}
-
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 <div>
                     <strong>{{ action.action_item }}</strong>
@@ -34,17 +29,46 @@
                         <span class="badge bg-danger text-white">Neatlikta ❌</span>
                     {% endif %}
                 </span>
+                <button data-bs-toggle="modal" data-bs-target="#action-{{ action.id }}">
+                    Redaguoti
+                </button>
             </li>
-        {% empty %}
-            <li class="list-group-item text-muted">Šiam mėnesiui veiksmų dar nėra sukurta.</li>
-        {% endfor %}
+
+<div class="modal fade" id="action-{{ action.id }}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+           <div class="modal-body">
+                <p><strong>Užduotis:</strong> {{ action.action_item }}</p>
+                <p><strong>Planas:</strong> {{ action.planned_result }}</p>
+                <form method="post">
+                    <input type="hidden" name="form_type" value="action_update">
+                    <input type="hidden" name="action_id" value="{{ action.id }}">
+                    {% csrf_token %}
+                    <div class="mb-2">
+                        <label>Faktas:</label>
+                        <input type="number" name="actual_result" value="{{ action.actual_result }}" step="0.1" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label>Kas trukdo įgyvendinti užduotį?</label>
+                        <textarea name="notes" class="form-control">{{ action.notes }}</textarea>
+                    </div>
+                    <div class="mb-2">
+                        <input type="checkbox" name="is_done" {% if action.is_done %}checked{% endif %}> Užduotis atlikta
+                    </div>
+                    <button type="submit" class="btn btn-primary">Išsaugoti</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
     </ul>
-        <!-- Mygtukas -->
+<!-- Mygtukas -->
 <button data-bs-toggle="modal" data-bs-target="#actionModal">
     Pridėti užduotį
 </button>
 
-<!-- Modal -->
+<!-- Naujo action kūrimas -->
 <div class="modal fade" id="actionModal">
     <div class="modal-dialog">
         <div class="modal-content">

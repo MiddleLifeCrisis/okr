@@ -27,3 +27,7 @@ class ActionForm(forms.ModelForm):
         model = Action
         fields = ['action_item', 'unit', 'planned_result', 'actual_result', 'is_done', 'notes']
 
+class ActionUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Action
+        fields = ['actual_result', 'is_done', 'notes']
