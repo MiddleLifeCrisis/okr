@@ -25,7 +25,8 @@ def index(request):
 @login_required
 def dashboard(request, pk):
     objective = get_object_or_404(Objective, pk=pk, user=request.user)
-    current_month_num = timezone.now().month
+    current_month_num = int(request.GET.get('month', timezone.now().month))
+    current_month_num = max(1, min(12, current_month_num))
 
     if request.method == 'POST':
         month_result_id = request.POST.get('month_result_id')
