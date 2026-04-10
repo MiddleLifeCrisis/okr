@@ -34,7 +34,7 @@ def dashboard(request, pk):
         form = MonthResultForm(request.POST, instance=month_result)
         if form.is_valid():
             form.save()
-        return redirect('dashboard', pk=pk)
+        return redirect(f'/dashboard/{pk}/?month={current_month_num}')
 
     return render(request, 'dashboard.html', {
         'objective': objective,
