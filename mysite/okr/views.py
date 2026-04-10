@@ -1,7 +1,7 @@
 
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import KeyResultForm, ObjectiveForm, MonthResultForm
+from .forms import KeyResultForm, ObjectiveForm, MonthResultForm, ActionForm
 from .models import Objective, Action, MonthResult, KeyResultSuggestion
 from .services import generate_month_results
 
@@ -25,7 +25,6 @@ def dashboard(request, pk):
                                               })
 
 def action_items(request, year, month, kr_id):
-
     month_result = get_object_or_404(
         MonthResult,
         id=kr_id,
@@ -34,17 +33,26 @@ def action_items(request, year, month, kr_id):
     )
 
     if request.method == 'POST':
-        form = MonthResultForm(request.POST, instance=month_result)
-        if form.is_valid():
-            form.save()
-            return redirect('dashboard', pk = month_result.monthly_key_result.objective.pk)
+        if request.POST.get('form_type') == 'month_result':
+            form = MonthResultForm(request.POST, instance=month_result)
+            if form.is_valid():
+                form.save()
+        elif request.POST.get('form_type') == 'action':
+            action_form = ActionForm(request.POST)
+            if action_form.is_valid():
+                action = action_form.save(commit=False)
+                action.month_result = month_result
+                action.save()
+        return redirect('dashboard', pk=month_result.monthly_key_result.objective.pk)
     else:
         form = MonthResultForm(instance=month_result)
+        action_form = ActionForm()
 
     return render(request, 'actions.html', {
         'month_result': month_result,
         'actions': month_result.action_set.all(),
         'form': form,
+        'action_form': action_form,
     })
 
 def month_result_calc(request, objective_pk):

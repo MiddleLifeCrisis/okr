@@ -7,14 +7,16 @@
     <p class="text-muted">Laikotarpis: {{ month_result.month }} mėnuo, {{ month_result.monthly_key_result.objective.year }} m.</p>
     <h5>Mėnesio tikslas: {{ month_result.planned_result }}</h5>
     <form method="post">
+        <input type="hidden" name="form_type" value="month_result">
         {% csrf_token %}
-        {{ form.as_p }}
-    <button type="submit">Išsaugoti</button>
-</form>
+        {{ form.actual_result }}
+        <button type="submit">Išsaugoti</button>
+    </form>
     <hr>
     <h2>Mėnesio užduotys:</h2>
     <ul class="list-group">
         {% for action in actions %}
+
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 <div>
                     <strong>{{ action.action_item }}</strong>
@@ -37,9 +39,33 @@
             <li class="list-group-item text-muted">Šiam mėnesiui veiksmų dar nėra sukurta.</li>
         {% endfor %}
     </ul>
+        <!-- Mygtukas -->
+<button data-bs-toggle="modal" data-bs-target="#actionModal">
+    Pridėti užduotį
+</button>
 
+<!-- Modal -->
+<div class="modal fade" id="actionModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Nauja užduotis</h5>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+            <input type="hidden" name="form_type" value="action">
+                {% csrf_token %}
+                {{ action_form.as_p }}
+                <button type="submit">Išsaugoti</button>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
     <a href="{% url 'dashboard' month_result.monthly_key_result.objective.id %}" class="btn btn-secondary mt-4">
         Grįžti į Dashboard
     </a>
 </div>
 {% endblock %}
+
+

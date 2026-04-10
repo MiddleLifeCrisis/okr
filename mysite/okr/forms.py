@@ -1,5 +1,5 @@
 from django import forms
-from .models import Objective,KeyResult, MonthResult
+from .models import Objective,KeyResult, MonthResult, Action
 
 class ObjectiveForm(forms.ModelForm):
     class Meta:
@@ -21,4 +21,9 @@ class MonthResultForm(forms.ModelForm):
     class Meta:
         model = MonthResult
         fields = ['actual_result']
+
+class ActionForm(forms.ModelForm):
+    class Meta:
+        model = Action
+        fields = ['action_item', 'unit', 'planned_result', 'actual_result', 'is_done', 'notes']
 
