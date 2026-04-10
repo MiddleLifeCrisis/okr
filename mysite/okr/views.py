@@ -4,12 +4,17 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .forms import KeyResultForm, ObjectiveForm, MonthResultForm, ActionForm, ActionUpdateForm
 from .models import Objective, Action, MonthResult, KeyResultSuggestion
 from .services import generate_month_results
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def index(request):
-    objectives = Objective.objects.all()
+    objectives = Objective.objects.filter(user=request.user)
+
+    if not objectives.exists():
+        return redirect('onboarding')
+
     goal = objectives.filter(year=timezone.now().year).first().goal if objectives.exists() else "Jūsų metai"
-    # goal = Objective.objects.first().goal - tas pats tik trumpiau
     brand = objectives.first().brand if objectives.exists() else "Jūsų Brand"
     return render(request, 'index.html',
                   {'objectives': objectives,
@@ -17,8 +22,9 @@ def index(request):
                    'brand': brand
                    })
 
+@login_required
 def dashboard(request, pk):
-    objective = get_object_or_404(Objective, pk=pk)
+    objective = get_object_or_404(Objective, pk=pk, user=request.user)
     current_month_num = timezone.now().month
 
     if request.method == 'POST':
@@ -34,6 +40,7 @@ def dashboard(request, pk):
         'current_month_num': current_month_num,
     })
 
+@login_required
 def action_items(request, year, month, kr_id):
     month_result = get_object_or_404(
         MonthResult,
@@ -71,6 +78,7 @@ def action_items(request, year, month, kr_id):
         'action_form': action_form,
     })
 
+@login_required
 def month_result_calc(request, objective_pk):
     if request.method == 'POST':
         form = KeyResultForm(request.POST)
@@ -85,17 +93,21 @@ def month_result_calc(request, objective_pk):
 
     return render(request, 'month_result_calc.html', {'form': form})
 
+@login_required
 def onboarding (request):
     if request.method == 'POST':
         form = ObjectiveForm(request.POST)
         if form.is_valid():
-            objective = form.save()
-            return redirect('dashboard', pk = objective.pk)
+            objective = form.save(commit=False)
+            objective.user = request.user
+            objective.save()
+            return redirect('key_result_create', objective_pk=objective.pk)
     else:
         form = ObjectiveForm()
 
     return render(request, 'onboarding.html', {'form': form})
 
+@login_required
 def month_result_calc(request, objective_pk):
     suggestions = KeyResultSuggestion.objects.all()
 
@@ -115,6 +127,7 @@ def month_result_calc(request, objective_pk):
         'suggestions': suggestions
     })
 
+@login_required
 def update_month_form(request):
     if request.method == 'POST':
         form = MonthResultForm(request.POST)

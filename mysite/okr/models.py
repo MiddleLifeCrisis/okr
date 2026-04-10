@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Unit(models.Model):
     name = models.CharField(max_length=50)
@@ -7,8 +8,7 @@ class Unit(models.Model):
 
 
 class Objective(models.Model):
-
-
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     brand = models.CharField(max_length=100, default='Your Brand')
     team = models.CharField(max_length=200, default='Your Department')
     year = models.IntegerField()
