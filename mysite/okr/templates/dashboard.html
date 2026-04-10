@@ -27,7 +27,33 @@
                             <div class="progress-bar bg-success" style="width: {{ month_data.achievement_percentage }}%"></div>
                         </div>
                         <p class="card-text">Some example text some example text. John Doe is an architect and engineer</p>
-                        <a href="{% url 'action_items' objective.year month_data.month month_data.id %}" class="btn btn-primary">Koreguoti</a>
+                            <button data-bs-toggle="modal" data-bs-target="#modal-{{ month_data.id }}">
+                                Atnaujinti rezultatą
+                            </button
+                            <!-- Modal -->
+                                <div class="modal fade" id="modal-{{ month_data.id }}">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Įveskite naujausius duomenis</h5>
+                                            </div>
+                                            <div class="modal-body">
+                                                    <p>Tikslas: {{ month_data.planned_result }}</p>
+                                                    <p>Dabartinis faktas: {{ month_data.actual_result }}</p>
+                                                <form method="post">
+                                                    <input type="hidden" name="form_type" value="month_result">
+                                                    <input type="hidden" name="month_result_id" value="{{ month_data.id }}">
+                                                {% csrf_token %}
+                                                    <label>Faktas:</label>
+                                                    <input type="number" name="actual_result" step="0.1">
+                                                <button type="submit">Išsaugoti</button>
+                                            </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        <a href="{% url 'action_items' objective.year month_data.month month_data.id %}" class="btn btn-primary">Mėnesio užduotys</a>
+
 
 
                     {% endif %}

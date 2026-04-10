@@ -20,9 +20,19 @@ def index(request):
 def dashboard(request, pk):
     objective = get_object_or_404(Objective, pk=pk)
     current_month_num = timezone.now().month
-    return render(request, 'dashboard.html', {'objective': objective,
-                                              'current_month_num': current_month_num
-                                              })
+
+    if request.method == 'POST':
+        month_result_id = request.POST.get('month_result_id')
+        month_result = get_object_or_404(MonthResult, id=month_result_id)
+        form = MonthResultForm(request.POST, instance=month_result)
+        if form.is_valid():
+            form.save()
+        return redirect('dashboard', pk=pk)
+
+    return render(request, 'dashboard.html', {
+        'objective': objective,
+        'current_month_num': current_month_num,
+    })
 
 def action_items(request, year, month, kr_id):
     month_result = get_object_or_404(
