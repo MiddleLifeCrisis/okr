@@ -15,10 +15,12 @@
             <div class="navbar-nav">
                 <a class="nav-link" href="{% url 'onboarding' %}">Naujas tikslas</a>
                 {% if user.is_authenticated %}
+                    <span class="nav-link text-white">Prisijungęs: {{ user.username }}</span>
                     <form method="post" action="{% url 'logout' %}">
                         {% csrf_token %}
                         <button type="submit" class="nav-link btn btn-link">Atsijungti</button>
                     </form>
+
                 {% else %}
                     <a class="nav-link" href="{% url 'login' %}">Prisijungti</a>
                     <a class="nav-link" href="{% url 'signup' %}">Registracija</a>
