@@ -9,25 +9,37 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'index' %}">OKR</a>
-            <div class="navbar-nav">
-                <a class="nav-link" href="{% url 'onboarding' %}">Naujas tikslas</a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'index' %}">
+            <i class="fa-solid fa-bullseye"></i> Verslo tikslai
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="navbar-nav ms-auto">
                 {% if user.is_authenticated %}
-                    <span class="nav-link text-white">Prisijungęs: {{ user.username }}</span>
+                    <a class="nav-link" href="{% url 'onboarding' %}">
+                        <i class="fa-solid fa-plus"></i> Naujas tikslas
+                    </a>
+                    <span class="nav-link text-white">
+                        <i class="fa-solid fa-user"></i> {{ user.username }}
+                    </span>
                     <form method="post" action="{% url 'logout' %}">
                         {% csrf_token %}
-                        <button type="submit" class="nav-link btn btn-link">Atsijungti</button>
+                        <button type="submit" class="nav-link btn btn-link text-white">
+                            <i class="fa-solid fa-right-from-bracket"></i> Atsijungti
+                        </button>
                     </form>
-
                 {% else %}
                     <a class="nav-link" href="{% url 'login' %}">Prisijungti</a>
-                    <a class="nav-link" href="{% url 'signup' %}">Registracija</a>
+                    <a class="nav-link" href="{% url 'signup' %}">Registruotis</a>
                 {% endif %}
             </div>
         </div>
-    </nav>
+    </div>
+</nav>
     <div class="container">
         {% block content %}
         <!-- Čia Django "įklijuos" tavo index.html turinį -->

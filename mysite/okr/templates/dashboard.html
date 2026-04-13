@@ -3,16 +3,17 @@
 {% block content %}
 
 
-<h1 class="mt-4" xmlns:height="http://www.w3.org/1999/xhtml" xmlns:height="http://www.w3.org/1999/xhtml">{{ objective.year }} m. Strategija: {{ objective.brand }}</h1>
-<p class="lead text-muted">{{ objective.goal }}</p>
+<h3 class="mt-4" xmlns:height="http://www.w3.org/1999/xhtml" xmlns:height="http://www.w3.org/1999/xhtml">{{ objective.year }} m. Strategija: {{ objective.brand }}</h3>
+<h1 class="">{{ objective.goal }}</h1>
 
-<h2 class="mt-5"> "Jūsų verslo rezultatai:</h2>
+<h2 class="mt-5"> Mėnesio rezultatai:</h2>
 
 <div class="row" >
     <div class="d-flex align-items-center gap-3 mt-3">
     <a href="?month={{ current_month_num|add:'-1' }}" class="btn btn-secondary">← Ankstesnis</a>
     <h4 class="mb-0">{{ current_month_num }} mėnuo</h4>
     <a href="?month={{ current_month_num|add:'1' }}" class="btn btn-secondary">Sekantis →</a>
+        <a href="{% url 'key_result_create' objective.pk %}" class="btn btn-success ms-auto">+ Naujas Rezultatas</a>
     </div>
     {% for kr in objective.keyresult_set.all %}
 
@@ -57,9 +58,6 @@
                                     </div>
                                 </div>
                         <a href="{% url 'action_items' objective.year month_data.month month_data.id %}" class="btn btn-primary">Mėnesio užduotys</a>
-
-
-
                     {% endif %}
                 {% empty %}
                     <p>Duomenų nėra.</p>
@@ -69,7 +67,5 @@
      <br>
     {% endfor %}
 </div>
-<a href="{% url 'key_result_create' objective.pk %}" class="btn btn-primary">Naujas KR</a>
-
 
 {% endblock %}

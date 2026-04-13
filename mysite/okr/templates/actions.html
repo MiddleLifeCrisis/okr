@@ -20,6 +20,7 @@
                     <strong>{{ action.action_achievement_percentage }}</strong>
                     {% if action.notes %}
                         <br><small class="text-muted">{{ action.notes }}</small>
+                        <small class="text-muted">Komentaro data: {{ action.created_at|date:"Y-m-d" }}</small>
                     {% endif %}
                 </div>
                 <span>

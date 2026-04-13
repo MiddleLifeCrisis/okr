@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>Labas "{{ brand }}" Vadove!</h1>
-<p> <b>"{% now "Y" %}"metų tikslas:</b> {{ goal }}:</p>
+<h2>Sveiki,"{{ brand }}" vadove!</h2>
+<p> <b>{% now "Y" %} m. tikslas:</b> {{ goal }}:</p>
+<h2> Jūsų verslo rezultatai: </h2>
 <ul>
     {% for obj in objectives %}
-        <li><a href="{% url 'dashboard' obj.pk %}"> {{ obj.year }} einamojo mėnėsio rezultatai  </a>  </li>
+        <li><a href="{% url 'dashboard' obj.pk %}"> {{ obj.year }} m. </a>  </li>
     {% endfor %}
 </ul>
 

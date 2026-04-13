@@ -72,6 +72,7 @@ class MonthResult(models.Model):
         return f"{self.monthly_key_result} | {self.month} | "
 
 class Action(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
     month_result = models.ForeignKey(MonthResult, on_delete=models.CASCADE)
     action_item = models.CharField(max_length=200)
     unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True)
