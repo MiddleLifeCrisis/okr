@@ -3,18 +3,18 @@
 {% block content %}
 
 
-<h3 class="mt-4" xmlns:height="http://www.w3.org/1999/xhtml" xmlns:height="http://www.w3.org/1999/xhtml">{{ objective.year }} m. Strategija: {{ objective.brand }}</h3>
-<h1 class="">{{ objective.goal }}</h1>
-
-<h2 class="mt-5"> Mėnesio rezultatai:</h2>
+<h3 class="mt-4" xmlns:height="http://www.w3.org/1999/xhtml" xmlns:height="http://www.w3.org/1999/xhtml"> <b>Prekinis ženklas:</b>  {{ objective.brand }}</h3>
+<h3 class=""><b>{{ objective.year }} m. tikslas:</b>  {{ objective.goal }}</h3>
+<h3 class=""> <b>Mėnesio rezultatai:</b> </h3>
 
 <div class="row" >
-    <div class="d-flex align-items-center gap-3 mt-3">
+    <div class="d-flex align-items-center gap-3 mt-5 mb-3">
     <a href="?month={{ current_month_num|add:'-1' }}" class="btn btn-secondary">← Ankstesnis</a>
-    <h4 class="mb-0">{{ current_month_num }} mėnuo</h4>
+    <h4 class="mb-0">{{ current_month_num }} mėn.</h4>
     <a href="?month={{ current_month_num|add:'1' }}" class="btn btn-secondary">Sekantis →</a>
         <a href="{% url 'key_result_create' objective.pk %}" class="btn btn-success ms-auto">+ Naujas Rezultatas</a>
     </div>
+
     {% for kr in objective.keyresult_set.all %}
 
         <div class="card m-1" style="width:400px">
@@ -26,15 +26,15 @@
                         <div class="results" >
                             <h5>Mėnesio tikslas: {{ month_data.planned_result }}</h5>
                             <h5>Mėnesio faktas: {{ month_data.actual_result }}</h5>
+                            <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-{{ month_data.id }}">
+                                <i class="fa-solid fa-pen"></i> Atnaujinti
+                            </button>
                             <h5>Mėnesio progresas: {{ month_data.achievement_percentage|floatformat:1 }}%</h5>
                         </div>
                         <div class="progress" style="height: 20px;">
                             <div class="progress-bar bg-success" style="width: {{ month_data.achievement_percentage }}%"></div>
                         </div>
-                        <p class="card-text">Some example text some example text. John Doe is an architect and engineer</p>
-                            <button data-bs-toggle="modal" data-bs-target="#modal-{{ month_data.id }}">
-                                Atnaujinti rezultatą
-                            </button
+                        <p class="card-text"> <b>{{ current_month_num }} mėn.</b> rezultatui pasiekti Jūs sukūrėte šias užduotis: </p>
                             <!-- Modal -->
                                 <div class="modal fade" id="modal-{{ month_data.id }}">
                                     <div class="modal-dialog">
@@ -44,14 +44,24 @@
                                             </div>
                                             <div class="modal-body">
                                                     <p>Tikslas: {{ month_data.planned_result }}</p>
-                                                    <p>Dabartinis faktas: {{ month_data.actual_result }}</p>
+                                                    <p>Paskutinis faktas: {{ month_data.actual_result }}</p>
                                                 <form method="post">
                                                     <input type="hidden" name="form_type" value="month_result">
                                                     <input type="hidden" name="month_result_id" value="{{ month_data.id }}">
                                                 {% csrf_token %}
-                                                    <label>Faktas:</label>
-                                                    <input type="number" name="actual_result" step="0.1">
-                                                <button type="submit">Išsaugoti</button>
+                                                   <div class="mb-3">
+                                                       <label class="form-label fw-semibold">Dabartinis faktas:</label>
+                                                             <input type="number"
+                                                                   name="actual_result"
+                                                                   step="1"
+                                                                   value="{{ month_data.actual_result|default:'' }}"
+                                                                   class="form-control"
+                                                                   placeholder="Įveskite skaičių...">
+                                                   </div>
+                                                    <div class="d-flex justify-content-end gap-2">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Atšaukti</button>
+                                                        <button type="submit" class="btn btn-primary">Išsaugoti</button>
+                                                    </div>
                                             </form>
                                             </div>
                                         </div>
