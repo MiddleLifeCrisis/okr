@@ -1,10 +1,14 @@
 
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views import generic
+
 from .forms import KeyResultForm, ObjectiveForm, MonthResultForm, ActionForm, ActionUpdateForm
 from .models import Objective, Action, MonthResult, KeyResultSuggestion
 from .services import generate_month_results
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
 
 
 @login_required
@@ -139,3 +143,16 @@ def update_month_form(request):
         form = MonthResultForm()
 
     return render(request, 'actions.html', {'form': form})
+
+
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('index')
+    else:
+        form = UserCreationForm()
+
+    return render(request, 'registration/signup.html', {'form': form})

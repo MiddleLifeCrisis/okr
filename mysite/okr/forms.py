@@ -1,5 +1,8 @@
 from django import forms
 from .models import Objective,KeyResult, MonthResult, Action
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+
 
 class ObjectiveForm(forms.ModelForm):
     class Meta:
@@ -31,3 +34,8 @@ class ActionUpdateForm(forms.ModelForm):
     class Meta:
         model = Action
         fields = ['actual_result', 'is_done', 'notes']
+
+class RegisterForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ['username', 'password1', 'password2']
