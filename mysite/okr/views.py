@@ -81,6 +81,7 @@ def action_items(request, year, month, kr_id):
         'actions': month_result.action_set.all(),
         'form': form,
         'action_form': action_form,
+        'objective': month_result.monthly_key_result.objective,
     })
 
 @login_required

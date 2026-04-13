@@ -2,41 +2,83 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h1>Mėnesio rezultatas</h1>
-    <p class="lead">Rodiklis: {{ month_result.monthly_key_result.name }}</p>
-    <p class="text-muted">Laikotarpis: {{ month_result.month }} mėnuo, {{ month_result.monthly_key_result.objective.year }} m.</p>
-    <h5>Mėnesio tikslas: {{ month_result.planned_result }}</h5>
-    <h5>Mėnesio tikslas: {{ month_result.actual_result }}</h5>
-    <h5>Mėnesio progresas: {{ month_result.achievement_percentage|floatformat:1 }}%</h5>
+    <h3 class=""><b>{{ objective.year }} m. tikslas:</b>  {{ objective.goal }}</h3>
+    <h3 class=""><b>Rodiklis:</b>{{ month_result.monthly_key_result.name }}</h3>
+    <h3 class=""><b>Laikotarpis: </b>{{ month_result.monthly_key_result.objective.year }} m. {{ month_result.month }} mėnuo </h3>
+<div class="mb-3">
+    <div class="d-flex justify-content-between mb-1">
+        <span>Mėnesio progresas</span>
+        <span><strong>{{ month_result.achievement_percentage|floatformat:1 }}%</strong></span>
+    </div>
+    <div class="progress">
+        <div class="progress-bar"
+             role="progressbar"
+             style="width: {{ month_result.achievement_percentage }}%"
+             aria-valuenow="{{ month_result.achievement_percentage }}"
+             aria-valuemin="0"
+             aria-valuemax="100">
+        </div>
+    </div>
+</div>
     <hr>
-    <h2>Mėnesio užduotys:</h2>
+    <h3>Mėnesio užduotys:</h3>
     <ul class="list-group">
         {% for action in actions %}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <div>
+            <li class="list-group-item">
+
+                <!-- 1 EILUTĖ: Pavadinimas + statusas -->
+                <div class="d-flex justify-content-between align-items-center mb-2">
                     <strong>{{ action.action_item }}</strong>
-                    <strong>{{ action.planned_result }}</strong>
-                    <strong>{{ action.actual_result }}</strong>
-                    <strong>{{ action.action_achievement_percentage }}</strong>
-                    {% if action.notes %}
-                        <br><small class="text-muted">{{ action.notes }}</small>
-                        <small class="text-muted">Komentaro data: {{ action.created_at|date:"Y-m-d" }}</small>
+                    {% if action.is_done %}
+                        <span class="badge bg-success">Atlikta ✅</span>
+                    {% else %}
+                        <span class="badge bg-danger">Neatlikta ❌</span>
                     {% endif %}
                 </div>
-                <span>
-                    {% if action.is_done %}
-                        <span class="badge bg-success text-white">Atlikta ✅</span>
-                    {% else %}
-                        <span class="badge bg-danger text-white">Neatlikta ❌</span>
-                    {% endif %}
-                </span>
-                <button data-bs-toggle="modal" data-bs-target="#action-{{ action.id }}">
-                    Redaguoti
-                </button>
-                <!-- Trynimo mygtukas -->
-<button data-bs-toggle="modal" data-bs-target="#delete-{{ action.id }}">
-    Trinti
-</button>
+
+                <!-- 2 EILUTĖ: Planas ir Faktas -->
+                <div class="d-flex gap-3 mb-2">
+                    <small class="text-muted">Planas: <strong>{{ action.planned_result }}</strong></small>
+                    <small class="text-muted">Faktas: <strong>{{ action.actual_result }}</strong></small>
+                </div>
+
+                <!-- 3 EILUTĖ: Progress bar -->
+                <div class="mb-2">
+                    <div class="d-flex justify-content-between mb-1">
+                        <small class="text-muted">Progresas</small>
+                        <small><strong>{{ action.action_achievement_percentage|floatformat:1 }}%</strong></small>
+                    </div>
+                    <div class="progress" style="height: 8px;">
+                        <div class="progress-bar
+                            {% if action.action_achievement_percentage >= 80 %}bg-success
+                            {% elif action.action_achievement_percentage >= 50 %}bg-warning
+                            {% else %}bg-danger{% endif %}"
+                            style="width: {{ action.action_achievement_percentage }}%">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4 EILUTĖ: Komentaras (jei yra) -->
+                {% if action.notes %}
+                    <small class="text-muted d-block mb-2">
+                        💬 {{ action.notes }}
+                        <span class="ms-2">({{ action.created_at|date:"Y-m-d" }})</span>
+                    </small>
+                {% endif %}
+
+                <!-- 5 EILUTĖ: Mygtukai -->
+                <div class="d-flex gap-2">
+                    <button class="btn btn-sm btn-outline-primary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#action-{{ action.id }}">
+                        ✏️ Redaguoti
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger"
+                            data-bs-toggle="modal"
+                            data-bs-target="#delete-{{ action.id }}">
+                        🗑️ Trinti
+                    </button>
+                </div>
 
 <!-- Trynimo modal -->
 <div class="modal fade" id="delete-{{ action.id }}">
