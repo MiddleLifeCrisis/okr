@@ -156,3 +156,18 @@ def register(request):
         form = UserCreationForm()
 
     return render(request, 'registration/signup.html', {'form': form})
+
+@login_required
+def action_delete(request, pk):
+    action = get_object_or_404(Action, pk=pk)
+    if request.method == 'POST':
+        month_result = action.month_result
+        action.delete()
+        return redirect('action_items',
+                       year=month_result.monthly_key_result.objective.year,
+                       month=month_result.month,
+                       kr_id=month_result.id)
+    return redirect('action_items',
+                   year=action.month_result.monthly_key_result.objective.year,
+                   month=action.month_result.month,
+                   kr_id=action.month_result.id)

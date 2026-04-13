@@ -32,6 +32,32 @@
                 <button data-bs-toggle="modal" data-bs-target="#action-{{ action.id }}">
                     Redaguoti
                 </button>
+                <!-- Trynimo mygtukas -->
+<button data-bs-toggle="modal" data-bs-target="#delete-{{ action.id }}">
+    Trinti
+</button>
+
+<!-- Trynimo modal -->
+<div class="modal fade" id="delete-{{ action.id }}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Patvirtinti trynimą</h5>
+            </div>
+            <div class="modal-body">
+                <p>Ar tikrai norite ištrinti: <strong>{{ action.action_item }}</strong>?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Atšaukti</button>
+                <form method="post" action="{% url 'action_delete' action.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Ištrinti</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
             </li>
 
 <div class="modal fade" id="action-{{ action.id }}">
