@@ -2,6 +2,7 @@
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
+from .models import Objective, Action, ActionComment
 
 from .forms import KeyResultForm, ObjectiveForm, MonthResultForm, ActionForm, ActionUpdateForm
 from .models import Objective, Action, MonthResult, KeyResultSuggestion
@@ -79,6 +80,16 @@ def action_items(request, year, month, kr_id):
             action_update_form = ActionUpdateForm(request.POST, instance=action)
             if action_update_form.is_valid():
                 action_update_form.save()
+        elif request.POST.get('form_type') == 'add_comment':
+            action_id = request.POST.get('action_id')
+            text = request.POST.get('comment_text')
+            if action_id and text:
+                action = get_object_or_404(Action, id=action_id)
+                ActionComment.objects.create(
+                    action=action,
+                    user=request.user,
+                    text=text
+                )
         return redirect('action_items', year=year, month=month, kr_id=kr_id)
     else:
         form = MonthResultForm(instance=month_result)

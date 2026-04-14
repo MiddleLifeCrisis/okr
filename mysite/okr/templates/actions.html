@@ -67,13 +67,31 @@
                     </div>
                 </div>
 
-                <!-- 4 EILUTĖ: Komentaras (jei yra) -->
-                {% if action.notes %}
-                    <small class="text-muted d-block mb-2">
-                        💬 {{ action.notes }}
-                        <span class="ms-2">({{ action.created_at|date:"Y-m-d" }})</span>
-                    </small>
-                {% endif %}
+                <!-- Komentarų istorija -->
+                {% for comment in action.comments.all %}
+                    <div class="border-start border-2 ps-2 mb-1">
+                        <small class="text-muted">
+                            💬 {{ comment.text }}
+                            <span class="ms-2 text-secondary">{{ comment.created_at|date:"Y-m-d" }}</span>
+                        </small>
+                    </div>
+                {% empty %}
+                    <small class="text-muted">Komentarų nėra</small>
+                {% endfor %}
+
+                <!-- Naujo komentaro forma -->
+                <form method="post" class="mt-2">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="add_comment">
+                    <input type="hidden" name="action_id" value="{{ action.id }}">
+                    <div class="input-group input-group-sm">
+                        <input type="text"
+                               name="comment_text"
+                               class="form-control"
+                               placeholder="Pridėti komentarą...">
+                        <button type="submit" class="btn btn-outline-secondary">💬 Pridėti</button>
+                    </div>
+                </form>
 
                 <!-- 5 EILUTĖ: Mygtukai -->
                 <div class="d-flex gap-2">
@@ -161,7 +179,7 @@
 
                     <!-- Komentaras -->
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Kas trukdo įgyvendinti?</label>
+                        <label class="form-label fw-semibold">Kokios problemos įgyvendinant užduotis / Komentarai?</label>
                         <textarea name="notes"
                                   class="form-control"
                                   rows="3"
