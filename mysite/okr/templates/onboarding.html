@@ -1,9 +1,50 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Išsaugoti</button>
-</form>
+<div class="row justify-content-center">
+  <div class="col-md-7">
+
+
+
+
+
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h4 class="card-title mb-1">Naujas metų tikslas</h4>
+        <p class="text-muted small mb-4">Užpildykite laukus ir išsaugokite</p>
+        <form method="post">
+          {% csrf_token %}
+          {% crispy form %}
+          <button type="submit" class="btn btn-primary w-100 mt-2">
+            Išsaugoti tikslą
+          </button>
+        </form>
+      </div>
+    </div>
+
+          <div class="card shadow-sm border-0 mb-3">
+      <div class="card-body p-4">
+        <h6 class="fw-semibold mb-1">Kas yra geras tikslas?</h6>
+        <p class="text-muted small mb-3">
+          Tikslas turi rodyti kryptį ir įkvėpti — ne matuoti rezultatus.
+          Užmiršk skaičius, tai <strong>Key Results</strong> reikalas.
+        </p>
+
+        <p class="small fw-semibold text-success mb-1">✓ Geri pavyzdžiai</p>
+        <ul class="small text-muted mb-3">
+          <li>Tapti įmone, į kurią geriausieji renkasi patys.</li>
+          <li>Sukurti produktą, kuriuo klientai didžiuojasi pasakoti draugams.</li>
+          <li>Iš reaktyvios įmonės tapti ta, kuri formuoja rinkos žaidimo taisykles.</li>
+        </ul>
+
+        <div class="alert alert-warning small py-2 mb-0">
+          <strong>⚠ Blogas pavyzdys:</strong>
+          „Padidinti apyvartą 30 %" — tai <strong>Key Result</strong>, ne tikslas.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
 {% endblock %}
