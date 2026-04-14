@@ -1,9 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h2>Sveiki,"{{ brand }}" vadove!</h2>
+<h2>Sveiki, "{{ brand }}" vadove!</h2>
 <h3>Jūsų tikslai:</h3>
-
 
 <p><b>{% now "Y" %} m. tikslas:</b>
     {% if current_objective %}
@@ -20,11 +19,65 @@
         Tikslas nenurodytas
     {% endif %}
 </p>
-<h3> Jūsų verslo rezultatai: </h3>
+
+<h3>Jūsų verslo rezultatai:</h3>
 <ul>
     {% for obj in objectives %}
-        <li><a href="{% url 'dashboard' obj.pk %}"> {{ obj.year }} m. </a>  </li>
+        <li><a href="{% url 'dashboard' obj.pk %}">{{ obj.year }} m.</a></li>
     {% endfor %}
 </ul>
+
+<h3>{% now "Y" %} m. rodiklių grafikai</h3>
+<div id="charts-container"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const chartsData = {{ charts_data|safe }};
+  const container = document.getElementById('charts-container');
+
+  if (chartsData.length === 0) {
+    container.innerHTML = '<p>Nėra rodiklių duomenų.</p>';
+  }
+
+  chartsData.forEach((chart, index) => {
+    const wrapper = document.createElement('div');
+    wrapper.classList.add('mb-5');
+    wrapper.innerHTML = `<h5>${chart.name}</h5><canvas id="chart-${index}"></canvas>`;
+    container.appendChild(wrapper);
+
+    const ctx = document.getElementById(`chart-${index}`).getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: chart.months,
+        datasets: [
+          {
+            label: 'Planas',
+            data: chart.planned,
+            backgroundColor: 'rgba(99, 102, 241, 0.5)',
+            borderColor: 'rgba(99, 102, 241, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Faktinis',
+            data: chart.actual,
+            backgroundColor: 'rgba(34, 197, 94, 0.5)',
+            borderColor: 'rgba(34, 197, 94, 1)',
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'top' }
+        },
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
+  });
+</script>
 
 {% endblock %}

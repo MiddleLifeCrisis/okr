@@ -11,6 +11,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from datetime import datetime
+import json
+from django.core.serializers.json import DjangoJSONEncoder
 
 @login_required
 def index(request):
@@ -25,6 +27,18 @@ def index(request):
 
     goal = objectives.filter(year=timezone.now().year).first().goal if objectives.exists() else "Jūsų metai"
     brand = objectives.first().brand if objectives.exists() else "Jūsų Brand"
+    # Grafiko duomenys
+    charts_data = []
+    if current_objective:
+        for kr in current_objective.keyresult_set.all():
+            months = kr.monthresult_set.order_by('month')
+            charts_data.append({
+                'name': kr.name,
+                'planned': [float(m.planned_result) for m in months],
+                'actual': [float(m.actual_result) if m.actual_result else None for m in months],
+                'months': [m.get_month_display() for m in months],
+            })
+
     return render(request, 'index.html',
                   {'objectives': objectives,
                    'current_year': current_year,
@@ -32,7 +46,8 @@ def index(request):
                    'goal': goal,
                    'current_objective': current_objective,
                    'last_objective': last_objective,
-                   'brand': brand
+                   'brand': brand,
+                   'charts_data': json.dumps(charts_data, cls=DjangoJSONEncoder),
                    })
 
 @login_required
@@ -101,6 +116,7 @@ def action_items(request, year, month, kr_id):
         'form': form,
         'action_form': action_form,
         'objective': month_result.monthly_key_result.objective,
+        'kr': month_result.monthly_key_result,
     })
 
 @login_required
@@ -181,3 +197,19 @@ def action_delete(request, pk):
                    year=action.month_result.monthly_key_result.objective.year,
                    month=action.month_result.month,
                    kr_id=action.month_result.id)
+
+
+@login_required
+def comment_delete(request, comment_id):
+    comment = get_object_or_404(ActionComment, id=comment_id, user=request.user)
+
+    # Išsaugome kur grįžti po trynimo
+    action = comment.action
+    month_result = action.month_result
+
+    comment.delete()
+
+    return redirect('action_items',
+                    year=month_result.monthly_key_result.objective.year,
+                    month=month_result.month,
+                    kr_id=month_result.id)
