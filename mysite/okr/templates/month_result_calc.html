@@ -1,16 +1,78 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-        <datalist id="kr-suggestions">
-            {% for s in suggestions %}
-                <option value="{{ s.name }}">
-            {% endfor %}
-        </datalist>
-    {{ form.as_p }}
+<div class="row justify-content-center">
+  <div class="col-md-7">
 
-    <button type="submit">Išsaugoti</button>
-</form>
+        <h3 class="mt-4" xmlns:height="http://www.w3.org/1999/xhtml" xmlns:height="http://www.w3.org/1999/xhtml"> <b>Prekinis ženklas:</b>  {{ objective.brand }}</h3>
+        <h3 class=""><b>{{ objective.year }} m. tikslas:</b>  {{ objective.goal }}</h3>
+        <h3 class="mb-4"> <b>Įveskite rodiklį kaip pamatuosite metinį tikslą:</b> </h3>
+
+        <form method="post">
+            {% csrf_token %}
+                <datalist id="kr-suggestions">
+                    {% for s in suggestions %}
+                        <option value="{{ s.name }}">
+                    {% endfor %}
+                </datalist>
+            {% crispy form %}
+                <button type="submit" class="btn btn-primary w-100 mt-2">
+                  Išsaugoti rodiklį
+                </button>
+                <button type="submit" name="save_and_add" class="btn btn-outline-primary w-100 mt-2">
+                  Išsaugoti rodiklį ir pridėti naują
+                </button>
+
+
+        </form>
+      <hr class="my-3 text-muted">
+<div class="card shadow-sm border-0">
+  <div class="card-body p-4">
+
+    <h6 class="fw-semibold mb-3">Kaip įvesti rodiklį?</h6>
+
+    <p class="text-muted small mb-3">
+      Rodiklis <strong>(Key Result)</strong> atsako į klausimą:
+      kaip žinosime, kad tikslas pasiektas? Kiekvienas rodiklis turi
+      pavadinimą, matavimo vienetą ir metinį tikslą.
+    </p>
+
+    <p class="small fw-semibold text-success mb-1">✓ Pavyzdžiai</p>
+    <ul class="small text-muted mb-4">
+      <li>Naujų klientų skaičius → vienetas: <strong>vnt.</strong>, metinis tikslas: <strong>120</strong></li>
+      <li>Pajamos iš naujų produktų → vienetas: <strong>€</strong>, metinis tikslas: <strong>50 000</strong></li>
+      <li>Komandos NPS → vienetas: <strong>balai</strong>, metinis tikslas: <strong>45</strong></li>
+    </ul>
+
+    <p class="small fw-semibold mb-2">Mėnesinio rodiklio parametras:</p>
+    <ul class="list-group list-group-flush small mb-0">
+      <li class="list-group-item px-0 py-2 border-0">
+        <span class="badge bg-primary me-2">÷ 12</span>
+        <strong>Išdaliniamas per mėnesius</strong> —
+        <span class="text-muted">metinis tikslas dalijamas į 12 lygių dalių. Tinka kai rezultatas kaupiasi: pardavimai, nauji klientai, pajamos.</span>
+      </li>
+      <li class="list-group-item px-0 py-2 border-0">
+        <span class="badge bg-success me-2">100%</span>
+        <strong>Vienodas procentas visiems mėn.</strong> —
+        <span class="text-muted">kiekvieną mėnesį laukiama 100 % tikslo. Tinka nuolatiniams rodikliams: NPS, atsakymo laikas, gedimų skaičius.</span>
+      </li>
+      <li class="list-group-item px-0 py-2 border-0">
+        <span class="badge bg-secondary me-2">✓ / ✗</span>
+        <strong>Įvykdyta / Neįvykdyta</strong> —
+        <span class="text-muted">nėra tarpinių reikšmių, svarbu tik galutinis faktas. Tinka projektams: sertifikatas gautas, sistema paleista, auditas atliktas.</span>
+      </li>
+    </ul>
+
+  </div>
+</div>
+
+
+  </div>
+</div>
+
+
+
+
 
 {% endblock %}

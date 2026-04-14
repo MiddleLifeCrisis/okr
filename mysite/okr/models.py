@@ -25,15 +25,16 @@ class KeyResult(models.Model):
     ]
 
     objective = models.ForeignKey(Objective, on_delete=models.CASCADE)
-    name = models.CharField(max_length=200)
-    unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True)
-    annual_goal = models.DecimalField(max_digits=12, decimal_places=2)
+    name = models.CharField(max_length=200, verbose_name="Rodiklis",)
+    unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, verbose_name="Matavimo vienetas")
+    annual_goal = models.DecimalField(max_digits=12, decimal_places=2, verbose_name="Metinis rezultatas")
     icon_class = models.CharField(max_length=50, default="fa-rocket")
 
     distribution_type = models.CharField(
         max_length=20,
         choices=DISTRIBUTION_CHOICES,
         default='cumulative',
+        verbose_name="Mėnesinis rodiklio parametras"
     )
 
     def __str__(self):

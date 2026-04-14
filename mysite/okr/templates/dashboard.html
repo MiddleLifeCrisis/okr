@@ -26,15 +26,15 @@
                         <div class="results" >
                             <h5>Mėnesio tikslas: {{ month_data.planned_result }}</h5>
                             <h5>Mėnesio faktas: {{ month_data.actual_result }}</h5>
-                            <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-{{ month_data.id }}">
+                            <button class="btn btn-outline-primary btn-sm mt-1" data-bs-toggle="modal" data-bs-target="#modal-{{ month_data.id }}">
                                 <i class="fa-solid fa-pen"></i> Atnaujinti
                             </button>
-                            <h5>Mėnesio progresas: {{ month_data.achievement_percentage|floatformat:1 }}%</h5>
+                            <h5 class="mt-2">Mėnesio progresas: {{ month_data.achievement_percentage|floatformat:1 }}%</h5>
                         </div>
                         <div class="progress" style="height: 20px;">
                             <div class="progress-bar bg-success" style="width: {{ month_data.achievement_percentage }}%"></div>
                         </div>
-                        <p class="card-text"> <b>{{ current_month_num }} mėn.</b> rezultatui pasiekti Jūs sukūrėte šias užduotis: </p>
+<!--                        <p class="card-text"> <b>{{ current_month_num }} mėn.</b> rezultatui pasiekti Jūs sukūrėte šias užduotis: </p>-->
                             <!-- Modal -->
                                 <div class="modal fade" id="modal-{{ month_data.id }}">
                                     <div class="modal-dialog">
@@ -67,7 +67,7 @@
                                         </div>
                                     </div>
                                 </div>
-                        <a href="{% url 'action_items' objective.year month_data.month month_data.id %}" class="btn btn-primary">Mėnesio užduotys</a>
+                        <a href="{% url 'action_items' objective.year month_data.month month_data.id %}" class="btn btn-primary mt-3">Mėnesio užduotys</a>
                     {% endif %}
                 {% empty %}
                     <p>Duomenų nėra.</p>

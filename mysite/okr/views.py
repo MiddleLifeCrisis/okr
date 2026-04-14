@@ -85,21 +85,6 @@ def action_items(request, year, month, kr_id):
     })
 
 @login_required
-def month_result_calc(request, objective_pk):
-    if request.method == 'POST':
-        form = KeyResultForm(request.POST)
-        if form.is_valid():
-            key_result = form.save(commit=False)
-            key_result.objective = Objective.objects.get(pk=objective_pk)
-            key_result.save()
-            generate_month_results(key_result)
-            return redirect('dashboard', pk = key_result.objective.pk)
-    else:
-        form = KeyResultForm()
-
-    return render(request, 'month_result_calc.html', {'form': form})
-
-@login_required
 def onboarding (request):
     if request.method == 'POST':
         form = ObjectiveForm(request.POST)
@@ -116,20 +101,25 @@ def onboarding (request):
 @login_required
 def month_result_calc(request, objective_pk):
     suggestions = KeyResultSuggestion.objects.all()
+    objective = get_object_or_404(Objective, pk=objective_pk, user=request.user)
 
     if request.method == 'POST':
         form = KeyResultForm(request.POST)
         if form.is_valid():
             key_result = form.save(commit=False)
-            key_result.objective = Objective.objects.get(pk=objective_pk)
+            key_result.objective = objective  # tiesiog naudoji jau turimą objektą
             key_result.save()
             generate_month_results(key_result)
-            return redirect('dashboard', pk = key_result.objective.pk)
+            if 'save_and_add' in request.POST:
+                return redirect('key_result_create', objective_pk=objective.pk)
+            return redirect('dashboard', pk=objective.pk)
+
     else:
         form = KeyResultForm()
 
     return render(request, 'month_result_calc.html', {
         'form': form,
+        'objective': objective,
         'suggestions': suggestions
     })
 
@@ -139,7 +129,7 @@ def update_month_form(request):
         form = MonthResultForm(request.POST)
         if form.is_valid():
             actual_result = form.save()
-            return redirect('dashboard', pk=month_resutl)
+            return redirect('dashboard', pk=month_result)
     else:
         form = MonthResultForm()
 

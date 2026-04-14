@@ -26,6 +26,11 @@ class KeyResultForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'list': 'kr-suggestions'}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = False  # Crispy negeneruoja <form> tago
+
 class MonthResultForm(forms.ModelForm):
     class Meta:
         model = MonthResult
