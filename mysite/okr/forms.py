@@ -2,6 +2,7 @@ from django import forms
 from .models import Objective,KeyResult, MonthResult, Action
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from crispy_forms.helper import FormHelper
 
 
 class ObjectiveForm(forms.ModelForm):
@@ -11,6 +12,11 @@ class ObjectiveForm(forms.ModelForm):
         widgets = {
             'goal': forms.Textarea(attrs={'rows': 3}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = False  # Crispy negeneruoja <form> tago
 
 class KeyResultForm(forms.ModelForm):
     class Meta:
