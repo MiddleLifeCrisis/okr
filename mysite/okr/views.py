@@ -9,11 +9,15 @@ from .services import generate_month_results
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
-
+from datetime import datetime
 
 @login_required
 def index(request):
     objectives = Objective.objects.filter(user=request.user)
+    current_year = datetime.now().year
+    last_year = current_year - 1
+    current_objective = objectives.filter(year=current_year).first()
+    last_objective = objectives.filter(year=last_year).first()
 
     if not objectives.exists():
         return redirect('onboarding')
@@ -22,7 +26,11 @@ def index(request):
     brand = objectives.first().brand if objectives.exists() else "Jūsų Brand"
     return render(request, 'index.html',
                   {'objectives': objectives,
+                   'current_year': current_year,
+                   'last_year': last_year,
                    'goal': goal,
+                   'current_objective': current_objective,
+                   'last_objective': last_objective,
                    'brand': brand
                    })
 

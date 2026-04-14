@@ -2,8 +2,25 @@
 {% block content %}
 
 <h2>Sveiki,"{{ brand }}" vadove!</h2>
-<p> <b>{% now "Y" %} m. tikslas:</b> {{ goal }}:</p>
-<h2> Jūsų verslo rezultatai: </h2>
+<h3>Jūsų tikslai:</h3>
+
+
+<p><b>{% now "Y" %} m. tikslas:</b>
+    {% if current_objective %}
+        {{ current_objective.goal }}
+    {% else %}
+        Tikslas nenurodytas
+    {% endif %}
+</p>
+
+<p><b>{{ last_year }} m. tikslas:</b>
+    {% if last_objective %}
+        {{ last_objective.goal }}
+    {% else %}
+        Tikslas nenurodytas
+    {% endif %}
+</p>
+<h3> Jūsų verslo rezultatai: </h3>
 <ul>
     {% for obj in objectives %}
         <li><a href="{% url 'dashboard' obj.pk %}"> {{ obj.year }} m. </a>  </li>

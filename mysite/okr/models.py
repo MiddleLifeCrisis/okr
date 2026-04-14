@@ -11,7 +11,7 @@ class Objective(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     brand = models.CharField(max_length=100, default='Your Brand', verbose_name="Prekinis ženklas",)
     team = models.CharField(max_length=200, default='Your Department', verbose_name="Atsakingas asmuo arba komanda",)
-    year = models.IntegerField(default='2026', verbose_name="Metai",)
+    year = models.IntegerField(default=2026, verbose_name="Metai",)
     goal = models.CharField(max_length=200, verbose_name="Tikslas",)
     def __str__(self):
         return f"{self.year} - {self.goal} "
